@@ -297,13 +297,14 @@ auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
     	// get .lastModified for SolidLogData.json file in pod /drive folder
     	var file=new File('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json');
     	if(!file) return;
+    	console.log('lastChange: '+lastChanged+'; lastModified: '+file.lastModified);
     	// compare with lastChanged and if later, restore from pod
     	if(file.lastModified>lastChanged) restore();
 	}
 });
 id('backupButton').addEventListener('click',backup);
 id('restoreButton').addEventListener('click',restore);
-function backup() {
+async function backup() {
   	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
   	console.log("BACKUP");
 	var fileName="drive/SolidLogData.json";
@@ -327,7 +328,7 @@ function backup() {
 	}
 	catch (error) {console.error(error.message);alert(error.message);}
 }
-function restore() {
+async function restore() {
 	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
 	console.log('RESTORE');
 	var response=await session.fetch('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json');
