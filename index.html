@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  	<meta name="theme-color" content="black">
+  	<title>SolidLog</title>
+  	<link rel="stylesheet" type="text/css" href="LogStyles.css">
+  	<link rel="manifest" href="manifest.json">
+  	<script src='https://cdn.jsdelivr.net/npm/@inrupt/solid-client-authn-browser/dist/solid-client-authn.bundle.js'></script>
+  	<meta name="application-name" content="SolidLog">
+</head>
+<body>
+<header class="header">
+    <div id="heading">
+        <span id="headerTitle">SolidLog</span>
+    </div>
+</header>
+<main id="main">
+	<ul id="list" class="logList"></ul>
+<div id='buttonFind' class='round-button'></div>
+<div id='buttonNew' class='round-button'></div>
+<div id='curtain'></div>
+<div id='findDialog' class='dialog'>
+	find <select id="findTagChooser"></select>
+</div>
+<div id="logDialog" class="dialog">
+    <div class="dialog-body">date <input type="date" id="logDateField"/> <input type="number" id="logDaysField" width="32"/> days</div>
+    <div class="dialog-body"> <textarea id="logTextField"></textarea>
+	<ul id="logTagList" class='tag-list'></ul></div>
+    <div class="dialog-buttons">
+	    <button id="buttonDeleteLog" class="delete-button"></button>
+	  	<button id="buttonAddLog" class="add-button"></button> 
+      	<button id="buttonSaveLog" class="save-button"></button>  
+    </div>
+</div>
+<div id="tagDialog" class="dialog">
+	<div class="dialog-body">choose a tag: <select id="tagChooser"></select>
+	</div>
+</div>
+<div id='newTagDialog' class='dialog'>
+	<div class="dialog-body">new tag: <input type="text" id="newTagField" size="10"/></div>
+	<div class="dialog-buttons">
+		<button id="buttonNewTag" class="add-button"></button>
+	</div>
+</div>
+ <div id='dataDialog' class='dialog'>
+ 	<div id='dataMessage'></div>
+	<button id='backupButton' class='text-button'>BACKUP</button>
+	<button id='restoreButton' class='text-button'>RESTORE</button>
+</div>
+<input type="file" id="fileChooser" accept=".json" style="display: none">
+</main>
+<script src="LogScript.js" async></script>
+</body>
+</html>
