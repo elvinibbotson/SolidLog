@@ -355,7 +355,7 @@ lastChange=window.localStorage.getItem('lastChange');
 if(lastChange) console.log('last changed: '+lastChange);
 else lastChange=0;
 console.log('backupDay: '+backupDay+'; lastChange: '+lastChange);
-// load();
+load();
 // implement service worker if browser is PWA friendly 
 if (navigator.serviceWorker.controller) {
 	console.log('Active service worker found, no need to register')
