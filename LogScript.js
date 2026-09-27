@@ -314,7 +314,7 @@ async function sync() {
     		throw new Error(`Response status: ${response.status}`);
     	}
     	console.log('sync response: '+response.toString());
-    	var lastModified=response.lastModified);
+    	var lastModified=response.lastModified;
     	console.log('lastModified: '+lastModified);
     	if(lastModified>lastChanged) restore();
   } 
