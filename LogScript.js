@@ -299,6 +299,7 @@ auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
 	}
 });
 async function sync() {
+	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
 	console.log('SYNC');
 	try {
     	const response=await fetch('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json',{method:'HEAD'});
