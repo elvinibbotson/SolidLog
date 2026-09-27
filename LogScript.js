@@ -295,6 +295,8 @@ auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
 		id('saveButton').removeAttribute("disabled");
     	id('loadButton').removeAttribute("disabled");
     	// get .lastModified for SolidLogData.json file in pod /drive folder
+    	sync();
+    	
     	var file=new File('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json');
     	if(!file) return;
     	console.log('lastChange: '+lastChanged+'; lastModified: '+file.lastModified);
@@ -302,8 +304,23 @@ auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
     	if(file.lastModified>lastChanged) restore();
 	}
 });
-id('backupButton').addEventListener('click',backup);
-id('restoreButton').addEventListener('click',restore);
+async function sync() {
+	console.log('SYNC');
+	var url="drive/SolidLogData.json";
+	try {
+    	const response=await fetch(url,{ method: 'HEAD' });
+    	if(!response.ok) {
+    		throw new Error(`Response status: ${response.status}`);
+    	}
+    	console.log('sync response: '+response.toString());
+    	var lastModified=response.lastModified);
+    	console.log('lastModified: '+lastModified);
+    	if(lastModified>lastChanged) restore();
+  } 
+  catch (error) {console.error(error.message);alert(error.message);}
+}
+id('saveButton').addEventListener('click',backup);
+id('loadButton').addEventListener('click',restore);
 async function backup() {
   	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
   	console.log("BACKUP");
