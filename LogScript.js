@@ -307,16 +307,15 @@ auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
 });
 async function sync() {
 	console.log('SYNC');
-	var url="drive/SolidLogData.json";
 	try {
-    	const response=await fetch(url,{ method: 'HEAD' });
+    	const response=await fetch('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json',{method:'HEAD'});
     	if(!response.ok) {
     		throw new Error(`Response status: ${response.status}`);
     	}
     	console.log('sync response: '+response.toString());
     	var lastModified=response.lastModified;
     	console.log('lastModified: '+lastModified);
-    	if(lastModified>lastChanged) restore();
+    	if(lastModified>lastChange) restore();
   } 
   catch (error) {console.error(error.message);alert(error.message);}
 }
@@ -372,7 +371,7 @@ else backupDay=0;
 lastChange=window.localStorage.getItem('lastChange');
 if(lastChange) console.log('last changed: '+lastChange);
 else lastChange=0;
-console.log('backupDay: '+backupDay+'; lastChanged: '+lastChanged);
+console.log('backupDay: '+backupDay+'; lastChange: '+lastChange);
 load();
 // implement service worker if browser is PWA friendly 
 if (navigator.serviceWorker.controller) {
