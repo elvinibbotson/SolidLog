@@ -325,8 +325,8 @@ async function backup() {
   	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
   	console.log("BACKUP");
 	var fileName="drive/SolidLogData.json";
-	console.log(items.length+" items - save");
-	var data={'items': items};
+	console.log(logs.length+" logs - save");
+	var data={'logs': logs};
 	var json=JSON.stringify(data);
 	try {
 		response=await session.fetch('https://elvinibbotson.privatedatapod.com/'+fileName,{
