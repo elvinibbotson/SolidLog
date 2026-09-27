@@ -274,6 +274,7 @@ function load() {
 }
 function save() {
 	var json=JSON.stringify(logs);
+	console.log('data to save: '+json);
 	window.localStorage.setItem('LogData',json);
 	console.log('data saved to LogData');
 }
@@ -335,7 +336,7 @@ async function backup() {
 		window.localStorage.setItem('backupDay',today);
     	message('data saved');
 	}
-	catch (error) {console.error(error.message);alert(error.message);}
+	catch(error) {console.error(error.message);alert(error.message);}
 }
 async function restore() {
 	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
@@ -343,6 +344,7 @@ async function restore() {
 	var response=await session.fetch('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json');
 	console.log('response: '+response.json);
 	var body=await response.json();
+	console.log('data: '+body);
     var logs=body.logs;
 	console.log(logs.length+" logs loaded");
     save();
