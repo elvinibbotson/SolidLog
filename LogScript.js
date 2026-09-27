@@ -296,12 +296,13 @@ auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
     	id('loadButton').removeAttribute("disabled");
     	// get .lastModified for SolidLogData.json file in pod /drive folder
     	sync();
-    	
+    	/*
     	var file=new File('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json');
     	if(!file) return;
     	console.log('lastChange: '+lastChanged+'; lastModified: '+file.lastModified);
     	// compare with lastChanged and if later, restore from pod
     	if(file.lastModified>lastChanged) restore();
+    	*/
 	}
 });
 async function sync() {
