@@ -229,7 +229,7 @@ function load() {
 	var data=localStorage.getItem('LogData');
 	if(!data) {
 		id('dataMessage').innerText='no data - restore backup?';
-		id('backupButton').disabled=true;
+		id('saveButton').disabled=true;
 		toggleDialog('dataDialog',true);
 		return;
 	}
@@ -268,7 +268,7 @@ function load() {
 	var days=today-backupDay;
 	if(days>4) { // backup reminder every 5 days
 		id('dataMessage').innerText=days+' days since last backup';
-		id('restoreButton').disabled=true;
+		id('loadButton').disabled=true;
 		toggleDialog('dataDialog',true);
 	}
 }
@@ -294,15 +294,7 @@ auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
 		console.log('logged in as '+session.info.webId);
 		id('saveButton').removeAttribute("disabled");
     	id('loadButton').removeAttribute("disabled");
-    	// get .lastModified for SolidLogData.json file in pod /drive folder
     	sync();
-    	/*
-    	var file=new File('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json');
-    	if(!file) return;
-    	console.log('lastChange: '+lastChanged+'; lastModified: '+file.lastModified);
-    	// compare with lastChanged and if later, restore from pod
-    	if(file.lastModified>lastChanged) restore();
-    	*/
 	}
 });
 async function sync() {
