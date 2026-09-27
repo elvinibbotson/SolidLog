@@ -226,7 +226,7 @@ function populateList() {
 }
 // DATA
 function load() {
-	var data=localStorage.getItem('LogbookData');
+	var data=localStorage.getItem('LogData');
 	if(!data) {
 		id('dataMessage').innerText='no data - restore backup?';
 		id('backupButton').disabled=true;
@@ -274,8 +274,8 @@ function load() {
 }
 function save() {
 	var json=JSON.stringify(logs);
-	window.localStorage.setItem('LogbookData',json);
-	console.log('data saved to LogbookData');
+	window.localStorage.setItem('LogData',json);
+	console.log('data saved to LogData');
 }
 // SOLID CODE
 function connect() {
@@ -360,7 +360,7 @@ if (navigator.serviceWorker.controller) {
 	console.log('Active service worker found, no need to register')
 } else { //Register the ServiceWorker
 	navigator.serviceWorker.register('sw.js', {
-		scope: '/Logbook/'
+		scope: '/SolidLog/'
 	}).then(function(reg) {
 		console.log('Service worker has been registered for scope:'+ reg.scope);
 	});
