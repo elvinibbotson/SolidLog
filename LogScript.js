@@ -330,7 +330,7 @@ async function backup() {
     		throw new Error(`Response status: ${response.status}`);
     	}
     	console.log('backup saved, status: '+response.status);
-    	showDialog('dataDialog',false);
+    	toggleDialog('dataDialog',false);
     	var today=Math.floor(new Date().getTime()/86400000);
 		window.localStorage.setItem('backupDay',today);
     	message('data saved');
@@ -348,13 +348,13 @@ async function restore() {
     save();
     console.log('data imported and saved');
     load();
-    showDialog('dataDialog',false);
+    toggleDialog('dataDialog',false);
     message('data loaded');
 }
 // DISPLAY MESSAGE
 function message(text) {
 	id('message').innerText=text;
-	showDialog('messageDialog',true);
+	toggleDialog('messageDialog',true);
 }
 // START-UP CODE
 backupDay=window.localStorage.getItem('backupDay');
