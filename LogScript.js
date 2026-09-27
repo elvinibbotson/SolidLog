@@ -17,7 +17,7 @@ var findTag=null;
 var currentDialog=null;
 var months="JanFebMarAprMayJunJulAugSepOctNovDec";
 var backupDay;
-var lastChange; // time/date of latest lastChange
+var latest; // time/date of latest change
 var changed=false; // changed this session?
 // solid session & authentication...
 const auth=solidClientAuthentication;
@@ -277,6 +277,8 @@ function save() {
 	console.log('data to save: '+json);
 	window.localStorage.setItem('LogData',json);
 	console.log('data saved to LogData');
+	latest=new Date().toString();
+	console.log('latest change: '+latest);
 }
 // SOLID CODE
 function connect() {
@@ -295,10 +297,11 @@ auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
 		console.log('logged in as '+session.info.webId);
 		id('saveButton').removeAttribute("disabled");
     	id('loadButton').removeAttribute("disabled");
-    	sync();
+    	// sync();
 	}
 });
-async function sync() {
+/*
+async function sync() { // USE If-Modifeid-Since INSTEAD
 	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
 	console.log('SYNC');
 	try {
@@ -309,10 +312,11 @@ async function sync() {
     	console.log('sync response: '+response.toString());
     	var lastModified=response.lastModified;
     	console.log('lastModified: '+lastModified);
-    	if(lastModified>lastChange) restore();
+    	if(lastModified>latest) restore();
   } 
   catch (error) {console.error(error.message);alert(error.message);}
 }
+*/
 id('saveButton').addEventListener('click',backup);
 id('loadButton').addEventListener('click',restore);
 async function backup() {
@@ -342,7 +346,11 @@ async function backup() {
 async function restore() {
 	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
 	console.log('RESTORE');
-	var response=await session.fetch('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json');
+	var response=await session.fetch('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json',
+	{ // ONLY RESTORE DATA FROM POD IF NEWER THAN CURRENT LOCAL DATA
+		method: 'GET',
+		headers: {'If-Modified-Since':latest}
+	});
 	console.log('response: '+response.json);
 	var body=await response.json();
 	console.log('data: '+body);
@@ -363,10 +371,10 @@ function message(text) {
 backupDay=window.localStorage.getItem('backupDay');
 if(backupDay) console.log('last backup on day '+backupDay);
 else backupDay=0;
-lastChange=window.localStorage.getItem('lastChange');
-if(lastChange) console.log('last changed: '+lastChange);
-else lastChange=0;
-console.log('backupDay: '+backupDay+'; lastChange: '+lastChange);
+latest=window.localStorage.getItem('latest');
+if(latest) console.log('last changed: '+latest);
+else latest=0;
+console.log('backupDay: '+backupDay+'; latest change: '+latest);
 load();
 // implement service worker if browser is PWA friendly 
 if (navigator.serviceWorker.controller) {
