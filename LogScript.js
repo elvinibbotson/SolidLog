@@ -16,7 +16,7 @@ var findTag=null;
 // var searchText=null;
 var currentDialog=null;
 var months="JanFebMarAprMayJunJulAugSepOctNovDec";
-var backupDay;
+// var backupDay;
 var latest; // time/date of latest change
 var changed=false; // changed this session?
 // solid session & authentication...
@@ -228,9 +228,9 @@ function populateList() {
 function load() {
 	var data=localStorage.getItem('LogData');
 	if(!data) {
-		id('dataMessage').innerText='no data - restore backup?';
-		id('saveButton').disabled=true;
-		toggleDialog('dataDialog',true);
+		id('dataMessage').innerText='NO DATA';
+		// id('saveButton').disabled=true;
+		// toggleDialog('dataDialog',true);
 		return;
 	}
 	logs=JSON.parse(data);
@@ -264,13 +264,15 @@ function load() {
 	id('tagChooser').options.add(tag);
 	console.log('search tags: '+id('findTagChooser').options.length);
 	populateList();
-	var today=Math.floor(new Date().getTime()/86400000);
-	var days=today-backupDay;
+	// var today=Math.floor(new Date().getTime()/86400000);
+	// var days=today-backupDay;
+	/*
 	if(days>4) { // backup reminder every 5 days
 		id('dataMessage').innerText=days+' days since last backup';
 		id('loadButton').disabled=true;
 		toggleDialog('dataDialog',true);
 	}
+	*/
 }
 function save() {
 	var json=JSON.stringify(logs);
@@ -295,8 +297,8 @@ function connect() {
 auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
 	if(session.info.isLoggedIn) {
 		console.log('logged in as '+session.info.webId);
-		id('saveButton').removeAttribute("disabled");
-    	id('loadButton').removeAttribute("disabled");
+		// id('saveButton').removeAttribute("disabled");
+    	// id('loadButton').removeAttribute("disabled");
     	sync();
 	}
 });
@@ -347,8 +349,9 @@ async function sync() { // USE If-Modifeid-Since INSTEAD
 	console.log('latest set to '+latest);
 	load(); // ensure working with latest dataset
 }
-id('saveButton').addEventListener('click',backup);
-id('loadButton').addEventListener('click',restore);
+// id('saveButton').addEventListener('click',backup);
+// id('loadButton').addEventListener('click',restore);
+/*
 async function backup() {
   	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
   	console.log("BACKUP");
@@ -367,8 +370,8 @@ async function backup() {
     	}
     	console.log('backup saved, status: '+response.status);
     	toggleDialog('dataDialog',false);
-    	var today=Math.floor(new Date().getTime()/86400000);
-		window.localStorage.setItem('backupDay',today);
+    	// var today=Math.floor(new Date().getTime()/86400000);
+		// window.localStorage.setItem('backupDay',today);
     	message('data saved');
 	}
 	catch(error) {console.error(error.message);alert(error.message);}
@@ -392,19 +395,20 @@ async function restore() {
     toggleDialog('dataDialog',false);
     message('data loaded');
 }
+*/
 // DISPLAY MESSAGE
 function message(text) {
 	id('message').innerText=text;
 	toggleDialog('messageDialog',true);
 }
 // START-UP CODE
-backupDay=window.localStorage.getItem('backupDay');
-if(backupDay) console.log('last backup on day '+backupDay);
-else backupDay=0;
+// backupDay=window.localStorage.getItem('backupDay');
+// if(backupDay) console.log('last backup on day '+backupDay);
+// else backupDay=0;
 latest=window.localStorage.getItem('latest');
 if(latest) console.log('last changed: '+latest);
 else latest=0;
-console.log('backupDay: '+backupDay+'; latest change: '+latest);
+console.log('latest change: '+latest);
 load();
 // implement service worker if browser is PWA friendly 
 if (navigator.serviceWorker.controller) {
