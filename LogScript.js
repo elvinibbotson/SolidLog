@@ -297,26 +297,54 @@ auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
 		console.log('logged in as '+session.info.webId);
 		id('saveButton').removeAttribute("disabled");
     	id('loadButton').removeAttribute("disabled");
-    	// sync();
+    	sync();
 	}
 });
-/*
 async function sync() { // USE If-Modifeid-Since INSTEAD
 	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
-	console.log('SYNC');
-	try {
-    	const response=await fetch('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json',{method:'HEAD'});
-    	if(!response.ok) {
-    		throw new Error(`Response status: ${response.status}`);
-    	}
-    	console.log('sync response: '+response.toString());
-    	var lastModified=response.lastModified;
-    	console.log('lastModified: '+lastModified);
-    	if(lastModified>latest) restore();
-  } 
-  catch (error) {console.error(error.message);alert(error.message);}
+	console.log('SYNC - DOWNLOAD?');
+	var response=await session.fetch('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json',
+	{ // ONLY RESTORE DATA FROM POD IF NEWER THAN CURRENT LOCAL DATA
+		method: 'GET',
+		headers: {'If-Modified-Since':latest}
+	});
+	console.log('response: '+response.json);
+	var body=await response.json();
+	console.log('data: '+body);
+	if(body) { // newer data downloaded
+		var logs=body.logs;
+		console.log(logs.length+" logs downloaded");
+		latest=new Date().toString();
+		console.log('latest set to 'latest);
+		save();
+		message('data downloaded');
+	}
+	else { // local data is newer - upload to pod
+		console.log('UPLOAD');
+		var fileName="drive/SolidLogData.json";
+		console.log(logs.length+" logs to upload");
+		var data={'logs': logs};
+		var json=JSON.stringify(data);
+		try {
+			response=await session.fetch('https://elvinibbotson.privatedatapod.com/'+fileName,{
+				method:'PUT',
+				headers:{'Content-Type':'application/json'},
+				body:json
+			});
+			if(!response.ok) {
+    			throw new Error(`Response status: ${response.status}`);
+    		}
+    		console.log('data uploaded, status: '+response.status);
+    		/* toggleDialog('dataDialog',false);
+    		var today=Math.floor(new Date().getTime()/86400000);
+			window.localStorage.setItem('backupDay',today);
+			*/
+    		message('data uploaded');
+		}
+		catch(error) {console.error(error.message);alert(error.message);}
+	}
+	load(); // ensure working with latest dataset
 }
-*/
 id('saveButton').addEventListener('click',backup);
 id('loadButton').addEventListener('click',restore);
 async function backup() {
