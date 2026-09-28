@@ -313,9 +313,8 @@ async function sync() { // USE If-Modifeid-Since INSTEAD
 	console.log('response: '+response.json);
 	var body=await response.json();
 	if(body.logs) { // newer data downloaded
-		console.log('logs downloaded');
-		var logs=body.logs;
-		console.log(logs.length+" logs downloaded");
+		console.log(body.logs.length+' logs downloaded');
+		logs=body.logs;
 		save();
 		message('data downloaded');
 	}
