@@ -312,15 +312,14 @@ async function sync() { // USE If-Modifeid-Since INSTEAD
 	});
 	console.log('response: '+response.json);
 	var body=await response.json();
-	console.log('data: '+body);
-	if(body) { // newer data downloaded
+	if(body.logs) { // newer data downloaded
+		console.log('logs downloaded');
 		var logs=body.logs;
 		console.log(logs.length+" logs downloaded");
-		latest=new Date().toString();
-		console.log('latest set to '+latest);
 		save();
 		message('data downloaded');
 	}
+	else(console.log('no download'));
 	else { // local data is newer - upload to pod
 		console.log('UPLOAD');
 		var fileName="drive/SolidLogData.json";
@@ -345,6 +344,9 @@ async function sync() { // USE If-Modifeid-Since INSTEAD
 		}
 		catch(error) {console.error(error.message);alert(error.message);}
 	}
+	latest=new Date().toString();
+	window.localStorage.setItem('latest',latest);
+	console.log('latest set to '+latest);
 	load(); // ensure working with latest dataset
 }
 id('saveButton').addEventListener('click',backup);
