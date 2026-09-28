@@ -302,6 +302,8 @@ auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
 });
 async function sync() { // USE If-Modifeid-Since INSTEAD
 	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
+	latest=window.localStorage.getItem('latest');
+	console.log('latest is '+latest);
 	console.log('SYNC - DOWNLOAD?');
 	var response=await session.fetch('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json',
 	{ // ONLY RESTORE DATA FROM POD IF NEWER THAN CURRENT LOCAL DATA
