@@ -319,8 +319,8 @@ async function sync() { // USE If-Modifeid-Since INSTEAD
 		save();
 		message('data downloaded');
 	}
-	else(console.log('no download'));
 	else { // local data is newer - upload to pod
+		console.log('no download'));
 		console.log('UPLOAD');
 		var fileName="drive/SolidLogData.json";
 		console.log(logs.length+" logs to upload");
