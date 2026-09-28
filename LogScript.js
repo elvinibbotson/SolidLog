@@ -179,7 +179,7 @@ function listLogTags() {
 function populateList() {
 	console.log("populate log list for search "+findTag);
 	if(findTag) id('headerTitle').textContent=findTag;
-	else id('headerTitle').textContent='Logbook';
+	else id('headerTitle').textContent='SolidLog';
 	logs.sort(function(a,b) { return Date.parse(a.date)-Date.parse(b.date)}); // date order
 	list=[];
 	for(var i=0;i<logs.length;i++) { // build list of logs to show
@@ -315,7 +315,7 @@ async function sync() { // USE If-Modifeid-Since INSTEAD
 		var logs=body.logs;
 		console.log(logs.length+" logs downloaded");
 		latest=new Date().toString();
-		console.log('latest set to 'latest);
+		console.log('latest set to '+latest);
 		save();
 		message('data downloaded');
 	}
