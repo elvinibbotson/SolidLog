@@ -421,7 +421,7 @@ latest=window.localStorage.getItem('latest');
 if(!latest) latest=new Date(0).toString(); // default to 1970
 console.log('latest change: '+latest);
 // sync();
-if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
+if(!session.info.isLoggedIn) {connect();} // ensure connected
 load();
 // implement service worker if browser is PWA friendly 
 if (navigator.serviceWorker.controller) {
