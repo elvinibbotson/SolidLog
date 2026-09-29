@@ -314,11 +314,10 @@ async function sync() { // USE If-Modifeid-Since INSTEAD
 	});
 	console.log('response: '+response.json);
 	var body=await response.json();
-	if(body.logs) { // newer data downloaded
-		console.log(body.logs.length+' logs downloaded');
+	if(body) { // newer data downloaded
 		logs=body.logs;
 		save();
-		message('data downloaded');
+		message(logs.length+' logs downloaded'');
 	}
 	else { // local data is newer - upload to pod
 		console.log('no download - UPLOAD');
@@ -408,8 +407,8 @@ function message(text) {
 // if(backupDay) console.log('last backup on day '+backupDay);
 // else backupDay=0;
 latest=window.localStorage.getItem('latest');
-if(latest) console.log('last changed: '+latest);
-else latest=null;
+// if(latest) console.log('last changed: '+latest);
+// else latest=null;
 console.log('latest change: '+latest);
 load();
 // implement service worker if browser is PWA friendly 
