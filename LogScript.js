@@ -303,7 +303,7 @@ auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
     	sync();
 	}
 });
-async function sync() { // USE If-Modifeid-Since INSTEAD
+async function sync() {
 	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
 	latest=window.localStorage.getItem('latest');
 	console.log('latest is '+latest);
@@ -316,6 +316,7 @@ async function sync() { // USE If-Modifeid-Since INSTEAD
 	console.log('response: '+response.json);
 	if(response.ok) {
 		var body=await response.json();
+		console.log('response - last modified: '+response.lastModified);
 		logs=body.logs;
 		save();
 		message(logs.length+' logs downloaded',false);
