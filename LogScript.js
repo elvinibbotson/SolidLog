@@ -306,21 +306,29 @@ async function sync() { // USE If-Modifeid-Since INSTEAD
 	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
 	latest=window.localStorage.getItem('latest');
 	console.log('latest is '+latest);
-	console.log('SYNC - DOWNLOAD?');
+	message('SYNC - DOWNLOAD?');
 	var response=await session.fetch('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json',
 	{ // ONLY RESTORE DATA FROM POD IF NEWER THAN CURRENT LOCAL DATA
 		method: 'GET',
 		headers: {'If-Modified-Since':latest}
 	});
 	console.log('response: '+response.json);
+	if(response.ok) {
+		var body=await response.json();
+		logs=body.logs;
+		save();
+		message(logs.length+' logs downloaded');
+	}
+	/*
 	var body=await response.json();
 	if(body) { // newer data downloaded
 		logs=body.logs;
 		save();
 		message(logs.length+' logs downloaded');
 	}
+	*/
 	else { // local data is newer - upload to pod
-		console.log('no download - UPLOAD');
+		message('no download - UPLOAD');
 		var fileName="drive/SolidLogData.json";
 		console.log(logs.length+" logs to upload");
 		var data={'logs': logs};
@@ -339,7 +347,7 @@ async function sync() { // USE If-Modifeid-Since INSTEAD
     		var today=Math.floor(new Date().getTime()/86400000);
 			window.localStorage.setItem('backupDay',today);
 			*/
-    		message('data uploaded');
+    		message(logs.length+' logs uploaded');
 		}
 		catch(error) {console.error(error.message);alert(error.message);}
 	}
