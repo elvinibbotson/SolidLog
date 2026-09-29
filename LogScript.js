@@ -235,7 +235,7 @@ function load() {
 	}
 	logs=JSON.parse(data);
 	console.log(logs.length+' logs read');
-	for(var i in logs) console.log('log '+i+': '+logs[i].text);
+	// for(var i in logs) console.log('log '+i+': '+logs[i].text);
 	// build tag list
 	tags=[];
 	for(var i=0;i<logs.length;i++) {
@@ -419,7 +419,8 @@ function message(text,clear) {
 latest=window.localStorage.getItem('latest');
 if(!latest) latest=new Date(0).toString(); // default to 1970
 console.log('latest change: '+latest);
-load();
+sync();
+// load();
 // implement service worker if browser is PWA friendly 
 if (navigator.serviceWorker.controller) {
 	console.log('Active service worker found, no need to register')
