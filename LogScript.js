@@ -122,7 +122,7 @@ id('curtain').addEventListener('click',function() {
 })
 // SHOW/HIDE DIALOGS
 function toggleDialog(d, visible) {
-    console.log('toggle '+d+' - '+visible);
+    // console.log('toggle '+d+' - '+visible);
     if(currentDialog) id(currentDialog).style.display='none';
     if(visible) {
     	currentDialog=d;
@@ -331,6 +331,8 @@ async function sync() {
 	*/
 	else { // local data is newer - upload to pod
 		message('|no download - UPLOAD',false);
+		upload();
+		/*
 		var fileName="drive/SolidLogData.json";
 		console.log(logs.length+" logs to upload");
 		var data={'logs': logs};
@@ -345,19 +347,14 @@ async function sync() {
     			throw new Error(`Response status: ${response.status}`);
     		}
     		console.log('data uploaded, status: '+response.status);
-    		/* toggleDialog('dataDialog',false);
-    		var today=Math.floor(new Date().getTime()/86400000);
-			window.localStorage.setItem('backupDay',today);
-			*/
     		message(logs.length+' logs uploaded',false);
 		}
 		catch(error) {console.error(error.message);alert(error.message);}
+		*/
 	}
-	/*
 	latest=new Date().toString();
 	window.localStorage.setItem('latest',latest);
 	console.log('latest set to '+latest);
-	*/
 	load(); // ensure working with latest dataset
 }
 // id('saveButton').addEventListener('click',backup);
@@ -365,7 +362,7 @@ async function sync() {
 // async function backup()
 async function upload() {
   	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
-  	console.log("BACKUP");
+  	console.log("UPLOAD",false);
 	var fileName="drive/SolidLogData.json";
 	console.log(logs.length+" logs - save");
 	var data={'logs': logs};
@@ -387,7 +384,7 @@ async function upload() {
 	}
 	catch(error) {console.error(error.message);alert(error.message);}
 }
-async function restore() {
+/* async function restore() {
 	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
 	console.log('RESTORE');
 	var response=await session.fetch('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json',
@@ -406,8 +403,10 @@ async function restore() {
     toggleDialog('dataDialog',false);
     message('data loaded');
 }
+*/
 // DISPLAY MESSAGE
 function message(text,clear) {
+	console.log(text);
 	if(clear) id('message').innerText=text;
 	else id('message').innerText+='\n'+text;
 	toggleDialog('messageDialog',true);
