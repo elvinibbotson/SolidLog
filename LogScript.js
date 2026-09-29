@@ -284,7 +284,7 @@ function save() {
 }
 // SOLID CODE
 function connect() {
-	console.log('CONNECT - logging in');
+	message('CONNECT - logging in');
 	try {
 		auth.login({
     		oidcIssuer:"https://privatedatapod.com",
@@ -297,6 +297,7 @@ function connect() {
 auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
 	if(session.info.isLoggedIn) {
 		console.log('logged in as '+session.info.webId);
+		message('LOGGED IN',false);
 		// id('saveButton').removeAttribute("disabled");
     	// id('loadButton').removeAttribute("disabled");
     	sync();
@@ -306,7 +307,7 @@ async function sync() { // USE If-Modifeid-Since INSTEAD
 	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
 	latest=window.localStorage.getItem('latest');
 	console.log('latest is '+latest);
-	message('SYNC - DOWNLOAD?');
+	message('SYNC - DOWNLOAD?',true);
 	var response=await session.fetch('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json',
 	{ // ONLY RESTORE DATA FROM POD IF NEWER THAN CURRENT LOCAL DATA
 		method: 'GET',
@@ -317,7 +318,7 @@ async function sync() { // USE If-Modifeid-Since INSTEAD
 		var body=await response.json();
 		logs=body.logs;
 		save();
-		message(logs.length+' logs downloaded');
+		message(logs.length+' logs downloaded',false);
 	}
 	/*
 	var body=await response.json();
@@ -328,7 +329,7 @@ async function sync() { // USE If-Modifeid-Since INSTEAD
 	}
 	*/
 	else { // local data is newer - upload to pod
-		message('no download - UPLOAD');
+		message('|no download - UPLOAD',false);
 		var fileName="drive/SolidLogData.json";
 		console.log(logs.length+" logs to upload");
 		var data={'logs': logs};
@@ -347,7 +348,7 @@ async function sync() { // USE If-Modifeid-Since INSTEAD
     		var today=Math.floor(new Date().getTime()/86400000);
 			window.localStorage.setItem('backupDay',today);
 			*/
-    		message(logs.length+' logs uploaded');
+    		message(logs.length+' logs uploaded',false);
 		}
 		catch(error) {console.error(error.message);alert(error.message);}
 	}
@@ -406,8 +407,9 @@ async function restore() {
 }
 */
 // DISPLAY MESSAGE
-function message(text) {
-	id('message').innerText=text;
+function message(text,clear) {
+	if(clear) id('message').innerText=text;
+	else id('message').innerText+='\n'+text;
 	toggleDialog('messageDialog',true);
 }
 // START-UP CODE
