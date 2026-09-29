@@ -276,7 +276,7 @@ function load() {
 }
 function save() {
 	var json=JSON.stringify(logs);
-	console.log('data to save: '+json);
+	// console.log('data to save: '+json);
 	window.localStorage.setItem('LogData',json);
 	console.log('data saved to LogData');
 	latest=new Date().toString();
@@ -419,8 +419,8 @@ function message(text,clear) {
 latest=window.localStorage.getItem('latest');
 if(!latest) latest=new Date(0).toString(); // default to 1970
 console.log('latest change: '+latest);
-sync();
-// load();
+// sync();
+load();
 // implement service worker if browser is PWA friendly 
 if (navigator.serviceWorker.controller) {
 	console.log('Active service worker found, no need to register')
