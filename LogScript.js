@@ -317,7 +317,7 @@ async function sync() { // USE If-Modifeid-Since INSTEAD
 	if(body) { // newer data downloaded
 		logs=body.logs;
 		save();
-		message(logs.length+' logs downloaded'');
+		message(logs.length+' logs downloaded);
 	}
 	else { // local data is newer - upload to pod
 		console.log('no download - UPLOAD');
@@ -407,8 +407,7 @@ function message(text) {
 // if(backupDay) console.log('last backup on day '+backupDay);
 // else backupDay=0;
 latest=window.localStorage.getItem('latest');
-// if(latest) console.log('last changed: '+latest);
-// else latest=null;
+if(!latest) latest=new Date(0).toString(); // default to 1970
 console.log('latest change: '+latest);
 load();
 // implement service worker if browser is PWA friendly 
