@@ -22,11 +22,11 @@ var latest; // time/date of latest change
 // solid session & authentication...
 const auth=solidClientAuthentication;
 const session=auth.getDefaultSession();
-/* TAP ON HEADER
+// TAP ON HEADER
 id('headerTitle').addEventListener('click',function() {
-	toggleDialog('dataDialog',true);
+	upload();
+	// toggleDialog('dataDialog',true);
 });
-*/
 id('buttonFind').addEventListener('click', function() { // show the search dialog
 	toggleDialog('findDialog',true);
 	id('findTagChooser').selectedIndex=-1;
@@ -362,8 +362,8 @@ async function sync() {
 }
 // id('saveButton').addEventListener('click',backup);
 // id('loadButton').addEventListener('click',restore);
-/*
-async function backup() {
+// async function backup()
+async function upload() {
   	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
   	console.log("BACKUP");
 	var fileName="drive/SolidLogData.json";
@@ -383,7 +383,7 @@ async function backup() {
     	toggleDialog('dataDialog',false);
     	// var today=Math.floor(new Date().getTime()/86400000);
 		// window.localStorage.setItem('backupDay',today);
-    	message('data saved');
+    	message(logs.length+' logs uploaded');
 	}
 	catch(error) {console.error(error.message);alert(error.message);}
 }
@@ -406,7 +406,6 @@ async function restore() {
     toggleDialog('dataDialog',false);
     message('data loaded');
 }
-*/
 // DISPLAY MESSAGE
 function message(text,clear) {
 	if(clear) id('message').innerText=text;
