@@ -18,7 +18,7 @@ var currentDialog=null;
 var months="JanFebMarAprMayJunJulAugSepOctNovDec";
 // var backupDay;
 var latest; // time/date of latest change
-var changed=false; // changed this session?
+// var changed=false; // changed this session?
 // solid session & authentication...
 const auth=solidClientAuthentication;
 const session=auth.getDefaultSession();
@@ -344,9 +344,11 @@ async function sync() { // USE If-Modifeid-Since INSTEAD
 		}
 		catch(error) {console.error(error.message);alert(error.message);}
 	}
+	/*
 	latest=new Date().toString();
 	window.localStorage.setItem('latest',latest);
 	console.log('latest set to '+latest);
+	*/
 	load(); // ensure working with latest dataset
 }
 // id('saveButton').addEventListener('click',backup);
@@ -407,7 +409,7 @@ function message(text) {
 // else backupDay=0;
 latest=window.localStorage.getItem('latest');
 if(latest) console.log('last changed: '+latest);
-else latest=0;
+else latest=null;
 console.log('latest change: '+latest);
 load();
 // implement service worker if browser is PWA friendly 
