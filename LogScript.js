@@ -22,11 +22,11 @@ var latest; // time/date of latest change
 // solid session & authentication...
 const auth=solidClientAuthentication;
 const session=auth.getDefaultSession();
-// TAP ON HEADER
+/* TAP ON HEADER
 id('headerTitle').addEventListener('click',function() {
 	toggleDialog('dataDialog',true);
 });
-// getFileHandle BUTTON
+*/
 id('buttonFind').addEventListener('click', function() { // show the search dialog
 	toggleDialog('findDialog',true);
 	id('findTagChooser').selectedIndex=-1;
