@@ -23,9 +23,8 @@ var latest; // time/date of latest change
 const auth=solidClientAuthentication;
 const session=auth.getDefaultSession();
 // TAP ON HEADER
-id('headerTitle').addEventListener('click',function() {
-	upload();
-	// toggleDialog('dataDialog',true);
+id('buttonSync').addEventListener('click',function() {
+	connect();
 });
 id('buttonFind').addEventListener('click', function() { // show the search dialog
 	toggleDialog('findDialog',true);
@@ -228,16 +227,12 @@ function populateList() {
 function load() {
 	var data=localStorage.getItem('LogData');
 	if(!data) {
-		id('dataMessage').innerText='NO DATA';
-		// id('saveButton').disabled=true;
-		// toggleDialog('dataDialog',true);
+		message('NO DATA');
 		return;
 	}
 	logs=JSON.parse(data);
 	console.log(logs.length+' logs read');
-	// for(var i in logs) console.log('log '+i+': '+logs[i].text);
-	// build tag list
-	tags=[];
+	tags=[]; // build tag list
 	for(var i=0;i<logs.length;i++) {
 		for(var j in logs[i].tags) { // for each tag in each log...
 			if(tags.indexOf(logs[i].tags[j])<0) { // ...if not already in tags...
@@ -264,15 +259,6 @@ function load() {
 	id('tagChooser').options.add(tag);
 	console.log('search tags: '+id('findTagChooser').options.length);
 	populateList();
-	// var today=Math.floor(new Date().getTime()/86400000);
-	// var days=today-backupDay;
-	/*
-	if(days>4) { // backup reminder every 5 days
-		id('dataMessage').innerText=days+' days since last backup';
-		id('loadButton').disabled=true;
-		toggleDialog('dataDialog',true);
-	}
-	*/
 }
 function save() {
 	var json=JSON.stringify(logs);
@@ -298,8 +284,6 @@ auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
 	if(session.info.isLoggedIn) {
 		console.log('logged in as '+session.info.webId);
 		message('LOGGED IN',false);
-		// id('saveButton').removeAttribute("disabled");
-    	// id('loadButton').removeAttribute("disabled");
     	sync();
 	}
 });
@@ -357,9 +341,6 @@ async function sync() {
 	console.log('latest set to '+latest);
 	load(); // ensure working with latest dataset
 }
-// id('saveButton').addEventListener('click',backup);
-// id('loadButton').addEventListener('click',restore);
-// async function backup()
 async function upload() {
   	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
   	console.log("UPLOAD",false);
@@ -376,34 +357,14 @@ async function upload() {
 		if(!response.ok) {
     		throw new Error(`Response status: ${response.status}`);
     	}
-    	console.log('backup saved, status: '+response.status);
-    	toggleDialog('dataDialog',false);
+    	console.log('data saved, status: '+response.status);
+    	// toggleDialog('dataDialog',false);
     	// var today=Math.floor(new Date().getTime()/86400000);
 		// window.localStorage.setItem('backupDay',today);
     	message(logs.length+' logs uploaded');
 	}
 	catch(error) {console.error(error.message);alert(error.message);}
 }
-/* async function restore() {
-	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
-	console.log('RESTORE');
-	var response=await session.fetch('https://elvinibbotson.privatedatapod.com/drive/SolidLogData.json',
-	{ // ONLY RESTORE DATA FROM POD IF NEWER THAN CURRENT LOCAL DATA
-		method: 'GET',
-		headers: {'If-Modified-Since':latest}
-	});
-	console.log('response: '+response.json);
-	var body=await response.json();
-	console.log('data: '+body);
-    var logs=body.logs;
-	console.log(logs.length+" logs loaded");
-    save();
-    console.log('data imported and saved');
-    load();
-    toggleDialog('dataDialog',false);
-    message('data loaded');
-}
-*/
 // DISPLAY MESSAGE
 function message(text,clear) {
 	console.log(text);
@@ -412,11 +373,11 @@ function message(text,clear) {
 	toggleDialog('messageDialog',true);
 }
 // START-UP CODE
-// backupDay=window.localStorage.getItem('backupDay');
-// if(backupDay) console.log('last backup on day '+backupDay);
-// else backupDay=0;
 latest=window.localStorage.getItem('latest');
-if(!latest) latest=new Date(0).toString(); // default to 1970
+if(!latest) {
+	latest=new Date(0).toString(); // default to 1970
+	window.localStorage.setItem('latest',latest);
+}
 console.log('latest change: '+latest);
 load();
 // implement service worker if browser is PWA friendly 
