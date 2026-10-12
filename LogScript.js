@@ -13,17 +13,14 @@ var log=null;
 var logIndex=null;
 var tags=[];
 var findTag=null;
-// var searchText=null;
 var currentDialog=null;
 var months="JanFebMarAprMayJunJulAugSepOctNovDec";
-// var backupDay;
 var latest; // time/date of latest change
-// var changed=false; // changed this session?
 // solid session & authentication...
 const auth=solidClientAuthentication;
 const session=auth.getDefaultSession();
 // TAP ON HEADER
-id('buttonSync').addEventListener('click',function() {
+id('buttonSync').addEventListener('click',connect);
 	connect();
 });
 id('buttonFind').addEventListener('click', function() { // show the search dialog
@@ -275,7 +272,7 @@ function connect() {
 		auth.login({
     		oidcIssuer:"https://privatedatapod.com",
     		redirectUrl:window.location.href,
-    		clientName:"SolidLocker"
+    		clientName:"SolidLog"
     	});
 	}
 	catch(error) {console.error(error.message);}
@@ -380,6 +377,7 @@ if(!latest) {
 }
 console.log('latest change: '+latest);
 load();
+if(session.info.isLoggedIn) sync(); // initial sync
 // implement service worker if browser is PWA friendly 
 if (navigator.serviceWorker.controller) {
 	console.log('Active service worker found, no need to register')
