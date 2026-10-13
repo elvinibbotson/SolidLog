@@ -21,8 +21,6 @@ const auth=solidClientAuthentication;
 const session=auth.getDefaultSession();
 // TAP ON HEADER
 id('buttonSync').addEventListener('click',connect);
-	connect();
-});
 id('buttonFind').addEventListener('click', function() { // show the search dialog
 	toggleDialog('findDialog',true);
 	id('findTagChooser').selectedIndex=-1;
