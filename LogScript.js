@@ -15,11 +15,12 @@ var tags=[];
 var findTag=null;
 var currentDialog=null;
 var months="JanFebMarAprMayJunJulAugSepOctNovDec";
+var syncDay; // last sync
 var latest; // time/date of latest change
 // solid session & authentication...
 const auth=solidClientAuthentication;
 const session=auth.getDefaultSession();
-// TAP ON HEADER
+// TAP SYNC ICON
 id('buttonSync').addEventListener('click',connect);
 id('buttonFind').addEventListener('click', function() { // show the search dialog
 	toggleDialog('findDialog',true);
@@ -261,7 +262,7 @@ function save() {
 	window.localStorage.setItem('LogData',json);
 	console.log('data saved to LogData');
 	latest=new Date().toString();
-	console.log('latest change: '+latest);
+	window.localStorage.setItem('latest',latest);
 }
 // SOLID CODE
 function connect() {
@@ -300,40 +301,12 @@ async function sync() {
 		save();
 		message(logs.length+' logs downloaded',false);
 	}
-	/*
-	var body=await response.json();
-	if(body) { // newer data downloaded
-		logs=body.logs;
-		save();
-		message(logs.length+' logs downloaded');
-	}
-	*/
 	else { // local data is newer - upload to pod
 		message('|no download - UPLOAD',false);
 		upload();
-		/*
-		var fileName="drive/SolidLogData.json";
-		console.log(logs.length+" logs to upload");
-		var data={'logs': logs};
-		var json=JSON.stringify(data);
-		try {
-			response=await session.fetch('https://elvinibbotson.privatedatapod.com/'+fileName,{
-				method:'PUT',
-				headers:{'Content-Type':'application/json'},
-				body:json
-			});
-			if(!response.ok) {
-    			throw new Error(`Response status: ${response.status}`);
-    		}
-    		console.log('data uploaded, status: '+response.status);
-    		message(logs.length+' logs uploaded',false);
-		}
-		catch(error) {console.error(error.message);alert(error.message);}
-		*/
 	}
-	latest=new Date().toString();
-	window.localStorage.setItem('latest',latest);
-	console.log('latest set to '+latest);
+	syncDay=new Date()/86400000;
+	window.localStorage.setItem('syncDay',syncDay);
 	load(); // ensure working with latest dataset
 }
 async function upload() {
@@ -353,10 +326,9 @@ async function upload() {
     		throw new Error(`Response status: ${response.status}`);
     	}
     	console.log('data saved, status: '+response.status);
-    	// toggleDialog('dataDialog',false);
-    	// var today=Math.floor(new Date().getTime()/86400000);
-		// window.localStorage.setItem('backupDay',today);
     	message(logs.length+' logs uploaded');
+    	syncDay=new Date()/86400000;
+		window.localStorage.setItem('syncDay',syncDay);
 	}
 	catch(error) {console.error(error.message);alert(error.message);}
 }
@@ -374,8 +346,13 @@ if(!latest) {
 	window.localStorage.setItem('latest',latest);
 }
 console.log('latest change: '+latest);
+syncDay=window.localStorage.getItem('syncDay');
+if(!syncDay) {
+	syncDay=new Date(0)/86400000; // default to 1970
+	window.localStorage.setItem('syncDay',syncDay);
+}
 load();
-if(session.info.isLoggedIn) sync(); // initial sync
+if(new Date()/86400000-syncDay>5) message('More than 5 days since last sync.');
 // implement service worker if browser is PWA friendly 
 if (navigator.serviceWorker.controller) {
 	console.log('Active service worker found, no need to register')
